@@ -42,3 +42,6 @@ bin/
 
 # general
 *.class
+
+# Verilog
+output
