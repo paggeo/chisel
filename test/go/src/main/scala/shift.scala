@@ -8,26 +8,23 @@ class shifter extends Module{
     val load = Input(Bool())
     val enable = Input(Bool())
     val loading_number = Input(UInt(4.W))
+    val shift_direction = Input(Bool()) // 1 :right | 0 : left
     val output_bit  = Output(UInt(1.W))
   })
   val reg = RegInit(0.U(4.W))
-  // val tmp = Wire(UInt(1.W))
-  //io.output_bit := 0.U
 
-
-  when(io.load === false.B){
+  when(io.load === true.B){
     reg := io.loading_number
-    // tmp := 0.U
     io.output_bit := 0.U
   }.elsewhen(io.enable){
-    reg := Cat(io.input_bit,reg(2,0))
-    // tmp := reg(3)
-    io.output_bit := reg(3)
+    when(io.shift_direction){
+      reg := Cat(reg(2,0),io.input_bit)
+      io.output_bit := reg(3)
+    }.otherwise{
+      reg := Cat(io.input_bit,reg(3,1))
+      io.output_bit := reg(0)
+    }
   }.otherwise {
-    // tmp := 0.U
     io.output_bit := 0.U 
   }
-  
-  // io.output_bit := tmp
-
 }
