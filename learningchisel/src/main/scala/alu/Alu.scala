@@ -30,21 +30,21 @@ class Alu(val n: Int) extends Module{
   io.C := 0.U  
 
 
-  adder.io.A  := io.A
-  adder.io.B  := io.B
-  outputAdder := adder.io.C
+  adder.io.A  <> io.A
+  adder.io.B  <> io.B
+  outputAdder <> adder.io.C
 
-  subber.io.A   := io.A
-  subber.io.B   := io.B
-  outputSubber  := subber.io.C
+  subber.io.A   <> io.A
+  subber.io.B   <> io.B
+  outputSubber  <> subber.io.C
 
-  mult.io.A   := io.A
-  mult.io.B   := io.B
-  outputMult  := mult.io.C
+  mult.io.A   <> io.A
+  mult.io.B   <> io.B
+  outputMult  <> mult.io.C
 
-  div.io.A   := io.A
-  div.io.B   := io.B
-  outputDiv  := div.io.C
+  div.io.A   <> io.A
+  div.io.B   <> io.B
+  outputDiv  <> div.io.C
 
   switch (io.sel) {
     is (0.U) { io.C := outputAdder}
