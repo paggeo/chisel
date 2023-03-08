@@ -1,0 +1,149 @@
+module halfadder(
+  input   io_a,
+  input   io_b,
+  output  io_sum,
+  output  io_carry
+);
+  assign io_sum = io_a ^ io_b; // @[halfadder.scala 14:18]
+  assign io_carry = io_a & io_b; // @[halfadder.scala 15:20]
+endmodule
+module fulladder(
+  input   io_a,
+  input   io_b,
+  input   io_cin,
+  output  io_sum,
+  output  io_carry
+);
+  wire  h0_io_a; // @[fulladder.scala 19:18]
+  wire  h0_io_b; // @[fulladder.scala 19:18]
+  wire  h0_io_sum; // @[fulladder.scala 19:18]
+  wire  h0_io_carry; // @[fulladder.scala 19:18]
+  wire  h1_io_a; // @[fulladder.scala 25:18]
+  wire  h1_io_b; // @[fulladder.scala 25:18]
+  wire  h1_io_sum; // @[fulladder.scala 25:18]
+  wire  h1_io_carry; // @[fulladder.scala 25:18]
+  wire  c1 = h0_io_carry; // @[fulladder.scala 16:16 23:15]
+  wire  c2 = h1_io_carry; // @[fulladder.scala 17:16 29:15]
+  halfadder h0 ( // @[fulladder.scala 19:18]
+    .io_a(h0_io_a),
+    .io_b(h0_io_b),
+    .io_sum(h0_io_sum),
+    .io_carry(h0_io_carry)
+  );
+  halfadder h1 ( // @[fulladder.scala 25:18]
+    .io_a(h1_io_a),
+    .io_b(h1_io_b),
+    .io_sum(h1_io_sum),
+    .io_carry(h1_io_carry)
+  );
+  assign io_sum = h1_io_sum; // @[fulladder.scala 28:13]
+  assign io_carry = c1 | c2; // @[fulladder.scala 31:18]
+  assign h0_io_a = io_a; // @[fulladder.scala 20:11]
+  assign h0_io_b = io_b; // @[fulladder.scala 21:11]
+  assign h1_io_a = h0_io_sum; // @[fulladder.scala 15:16 22:13]
+  assign h1_io_b = io_cin; // @[fulladder.scala 27:11]
+endmodule
+module rca(
+  input        clock,
+  input        reset,
+  input  [3:0] io_a,
+  input  [3:0] io_b,
+  input        io_cin,
+  output [3:0] io_sum,
+  output       io_carry
+);
+  wire  fa0_io_a; // @[rca.scala 68:19]
+  wire  fa0_io_b; // @[rca.scala 68:19]
+  wire  fa0_io_cin; // @[rca.scala 68:19]
+  wire  fa0_io_sum; // @[rca.scala 68:19]
+  wire  fa0_io_carry; // @[rca.scala 68:19]
+  wire  fa1_io_a; // @[rca.scala 75:19]
+  wire  fa1_io_b; // @[rca.scala 75:19]
+  wire  fa1_io_cin; // @[rca.scala 75:19]
+  wire  fa1_io_sum; // @[rca.scala 75:19]
+  wire  fa1_io_carry; // @[rca.scala 75:19]
+  wire  fa2_io_a; // @[rca.scala 82:19]
+  wire  fa2_io_b; // @[rca.scala 82:19]
+  wire  fa2_io_cin; // @[rca.scala 82:19]
+  wire  fa2_io_sum; // @[rca.scala 82:19]
+  wire  fa2_io_carry; // @[rca.scala 82:19]
+  wire  fa3_io_a; // @[rca.scala 90:19]
+  wire  fa3_io_b; // @[rca.scala 90:19]
+  wire  fa3_io_cin; // @[rca.scala 90:19]
+  wire  fa3_io_sum; // @[rca.scala 90:19]
+  wire  fa3_io_carry; // @[rca.scala 90:19]
+  reg [2:0] c_3; // @[rca.scala 33:16]
+  wire  c3 = fa2_io_carry; // @[rca.scala 29:22 87:16]
+  wire  c2 = fa1_io_carry; // @[rca.scala 29:22 80:16]
+  wire [1:0] c_3_hi = {c3,c2}; // @[Cat.scala 33:92]
+  wire  c1 = fa0_io_carry; // @[rca.scala 29:22 73:16]
+  reg [3:0] register_s1; // @[rca.scala 37:24]
+  wire  s0_0 = fa0_io_sum; // @[rca.scala 30:28 72:14]
+  reg [1:0] register_s2_a; // @[rca.scala 43:26]
+  reg [1:0] register_s2_b; // @[rca.scala 44:26]
+  reg [2:0] register_s2; // @[rca.scala 45:24]
+  wire  s1_1 = fa1_io_sum; // @[rca.scala 30:28 79:14]
+  reg [2:0] register_s3_a; // @[rca.scala 54:26]
+  reg [2:0] register_s3_b; // @[rca.scala 55:26]
+  reg [1:0] register_s3; // @[rca.scala 56:26]
+  wire  s2_2 = fa2_io_sum; // @[rca.scala 30:28 86:14]
+  reg [3:0] register_s4_a; // @[rca.scala 63:26]
+  reg [3:0] register_s4_b; // @[rca.scala 64:26]
+  wire [1:0] io_sum_lo = {register_s2[2],register_s1[3]}; // @[Cat.scala 33:92]
+  wire  tmp = fa3_io_sum; // @[rca.scala 89:17 94:14]
+  wire [1:0] io_sum_hi = {tmp,register_s3[1]}; // @[Cat.scala 33:92]
+  fulladder fa0 ( // @[rca.scala 68:19]
+    .io_a(fa0_io_a),
+    .io_b(fa0_io_b),
+    .io_cin(fa0_io_cin),
+    .io_sum(fa0_io_sum),
+    .io_carry(fa0_io_carry)
+  );
+  fulladder fa1 ( // @[rca.scala 75:19]
+    .io_a(fa1_io_a),
+    .io_b(fa1_io_b),
+    .io_cin(fa1_io_cin),
+    .io_sum(fa1_io_sum),
+    .io_carry(fa1_io_carry)
+  );
+  fulladder fa2 ( // @[rca.scala 82:19]
+    .io_a(fa2_io_a),
+    .io_b(fa2_io_b),
+    .io_cin(fa2_io_cin),
+    .io_sum(fa2_io_sum),
+    .io_carry(fa2_io_carry)
+  );
+  fulladder fa3 ( // @[rca.scala 90:19]
+    .io_a(fa3_io_a),
+    .io_b(fa3_io_b),
+    .io_cin(fa3_io_cin),
+    .io_sum(fa3_io_sum),
+    .io_carry(fa3_io_carry)
+  );
+  assign io_sum = {io_sum_hi,io_sum_lo}; // @[Cat.scala 33:92]
+  assign io_carry = fa3_io_carry; // @[rca.scala 95:16]
+  assign fa0_io_a = io_a[0]; // @[rca.scala 69:19]
+  assign fa0_io_b = io_b[0]; // @[rca.scala 70:19]
+  assign fa0_io_cin = io_cin; // @[rca.scala 71:14]
+  assign fa1_io_a = register_s2_a[1]; // @[rca.scala 76:28]
+  assign fa1_io_b = register_s2_b[1]; // @[rca.scala 77:28]
+  assign fa1_io_cin = c_3[0]; // @[rca.scala 78:20]
+  assign fa2_io_a = register_s3_a[2]; // @[rca.scala 83:28]
+  assign fa2_io_b = register_s3_b[2]; // @[rca.scala 84:28]
+  assign fa2_io_cin = c_3[1]; // @[rca.scala 85:20]
+  assign fa3_io_a = register_s4_a[3]; // @[rca.scala 91:28]
+  assign fa3_io_b = register_s4_b[3]; // @[rca.scala 92:28]
+  assign fa3_io_cin = c_3[2]; // @[rca.scala 93:20]
+  always @(posedge clock) begin
+    c_3 <= {c_3_hi,c1}; // @[Cat.scala 33:92]
+    register_s1 <= {register_s1[2:0],s0_0}; // @[Cat.scala 33:92]
+    register_s2_a <= {register_s2_a[0],io_a[1]}; // @[Cat.scala 33:92]
+    register_s2_b <= {register_s2_b[0],io_b[1]}; // @[Cat.scala 33:92]
+    register_s2 <= {register_s2[1:0],s1_1}; // @[Cat.scala 33:92]
+    register_s3_a <= {register_s3_a[1:0],io_a[2]}; // @[Cat.scala 33:92]
+    register_s3_b <= {register_s3_b[1:0],io_b[2]}; // @[Cat.scala 33:92]
+    register_s3 <= {register_s3[0],s2_2}; // @[Cat.scala 33:92]
+    register_s4_a <= {register_s4_a[2:0],io_a[3]}; // @[Cat.scala 33:92]
+    register_s4_b <= {register_s4_b[2:0],io_b[3]}; // @[Cat.scala 33:92]
+  end
+endmodule
